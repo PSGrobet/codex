@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from uuid import uuid4
-import platform
 
 # Auto-detect timezone from user's system
 local_tz = datetime.now().astimezone().tzinfo
@@ -20,6 +19,6 @@ class Note:
     tags: list[str] = field(default_factory=list)
 
     created_at: str = field(
-        default_factory=lambda: datetime.now(local_tz).isoformat()
+        default_factory=lambda: datetime.now().astimezone().isoformat()
     )
     id: str = field(default_factory=lambda: str(uuid4()))
