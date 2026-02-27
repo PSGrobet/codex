@@ -38,3 +38,16 @@ class AuthorRepository:
             return False
         self._save(filtered)
         return True
+    
+    def update(self, updated_author: Author) -> Author | None:
+        """
+        Replace an existing author record with the updated version
+        Returns the updated Author on None if id wasn't found
+        """
+        authors = self._load()
+        for i, a in enumerate(authors):
+            if a.id == updated_author.id:
+                authors[i] = updated_author
+                self._save(authors)
+                return updated_author
+        return None
