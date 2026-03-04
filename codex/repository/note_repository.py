@@ -6,13 +6,15 @@ ENTITY ="notes"
 class NoteRepository:
     """Manages persistence and retrieval of Note records"""
 
-    def _load(self) -> list(Note):
+    def _load(self) -> list[Note]:
         return json_store.load(ENTITY, Note)
 
     def _save(self, notes: list[Note]) -> None:
         json_store.save(ENTITY, notes)
     
     def add(self, note: Note) -> Note:
+        """It takes a fully constructed object, not individual fields,
+        it's the CLI's job to construct the object and pass to repo"""
         notes = self._load()
         notes.append(note)
         self._save(notes)
@@ -31,7 +33,7 @@ class NoteRepository:
         return [n for n in self._load() if tag_lower in [t.lower() for t in n.tags]]
 
     def search(self, query: str) -> list[Note]:
-        """Full texgt search across note contents"""
+        """Full text search across note contents"""
         query_lower = query.lower()
         return [n for n in self._load() if query_lower in n.text.lower()]
     
