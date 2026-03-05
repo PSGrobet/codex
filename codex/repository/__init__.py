@@ -1,0 +1,4 @@
+from codex.repository.author_repository import AuthorRepository as AuthorRepository
+from codex.repository.book_repository import BookRepository as BookRepository
+from codex.repository.note_repository import NoteRepository as NoteRepository
+from codex.repository.quote_repository import QuoteRepository as QuoteRepository

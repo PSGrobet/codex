@@ -31,7 +31,7 @@ class BookRepository:
     
     def get_by_series(self, series: str) -> None:
         series_lower = series.lower()
-        return [b for b in self._load() if series_lower in b.series.lower()]
+        return [b for b in self._load() if series_lower in str(b.series).lower()]
 
     def list_all(self) -> list[Book]:
         return self._load()

@@ -5,7 +5,7 @@ from uuid import uuid4
 class Author:
     """Represents a literary author in the archive."""
     name: str
-    nationality: str = ""
+    nationality: str | None = None
     birth_year: int | None = None
 
     # Generated automatically - caller never passes this in

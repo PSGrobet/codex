@@ -7,8 +7,8 @@ class Book:
     title: str
     author_id: str # reference to Author.id, not the Author object itself
     year: int | None = None
-    genre: str = ""
-    series: str = ""
+    genre: str | None = None
+    series: str | None = None
     series_order: int | None = None
 
     # Generated automatically - caller never passes this in
