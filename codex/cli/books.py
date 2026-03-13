@@ -34,7 +34,7 @@ def list_books():
         if b.series is not None:
             typer.echo(f"\tSeries: {b.series}, #{b.series_order}")
         if b.genre is not None:
-            typer.echo(f"\tGenre(s): {b.genre}")
+            typer.echo(f"\tGenre: {b.genre}")
 
 
 @app.command("search-title")
@@ -50,7 +50,7 @@ def search_title(title: str = typer.Argument(...)):
         if b.series is not None:
             typer.echo(f"\tSeries: {b.series}, #{b.series_order}")
         if b.genre is not None:
-            typer.echo(f"\tGenre(s): {b.genre}")
+            typer.echo(f"\tGenre: {b.genre}")
 
 
 @app.command("search-author")
@@ -66,6 +66,7 @@ def search_author(
         results = book_repo.get_by_author(id)
     else:
         results = [b for b in book_repo.list_all() if name.lower() in author_repo.get_by_id(b.author_id).name.lower()]
+
     if not results:
         typer.echo(f"No matching books for author: {id}.")
     for b in results:
@@ -74,7 +75,7 @@ def search_author(
         if b.series is not None:
             typer.echo(f"\tSeries: {b.series}, #{b.series_order}")
         if b.genre is not None:
-            typer.echo(f"\tGenre(s): {b.genre}")
+            typer.echo(f"\tGenre: {b.genre}")
 
 
 @app.command("search-genre")
@@ -95,7 +96,7 @@ def search_genre(genre: str = typer.Argument(...)):
         if b.series is not None:
             typer.echo(f"\tSeries: {b.series}, #{b.series_order}")
         if b.genre is not None:
-            typer.echo(f"\tGenre(s): {b.genre}")
+            typer.echo(f"\tGenre: {b.genre}")
 
 
 @app.command("search-series")
@@ -110,7 +111,7 @@ def search_series(series: str = typer.Argument(...)):
         if b.series is not None:
             typer.echo(f"\tSeries: {b.series}, #{b.series_order}")
         if b.genre is not None:
-            typer.echo(f"\tGenre(s): {b.genre}")
+            typer.echo(f"\tGenre: {b.genre}")
 
 
 @app.command("delete")
@@ -130,7 +131,7 @@ def update_book(
     author_id: str = typer.Option(None),
     year: int = typer.Option(None),
     genre: str = typer.Option(None),
-    series: str = typer.Option(None),
+    series: int = typer.Option(None),
     series_order: str = typer.Option(None)
 ):
     book = book_repo.get_by_id(id)
