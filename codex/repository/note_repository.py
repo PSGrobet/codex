@@ -32,10 +32,14 @@ class NoteRepository:
         tag_lower = tag.lower()
         return [n for n in self._load() if tag_lower in [t.lower() for t in n.tags]]
 
+
     def search(self, query: str) -> list[Note]:
-        """Full text search across note contents"""
+        """Full text search across note contents and tags."""
         query_lower = query.lower()
-        return [n for n in self._load() if query_lower in n.text.lower()]
+        all_notes = self._load()
+        text_results = [n for n in all_notes if query_lower in n.text.lower()]
+        tag_results = [n for n in all_notes if query_lower in [t.lower() for t in n.tags]]
+        return text_results + tag_results
     
     def list_all(self) -> list[Note]:
         return self._load()
