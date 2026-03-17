@@ -19,7 +19,7 @@ def add_book(
     Requires having author_id first"""
     book = Book(title=title, author_id=author_id, year=year, genre=genre, series=series, series_order=series_order)
     book_repo.add(book)
-    typer.echo(f"Added book {book.title} by {author_repo.get_by_id(author_id).name}")
+    typer.echo(f"Added book {book.title} by {author_repo.get_by_id(author_id).name} (id: {book.id})")
 
 
 @app.command("list")

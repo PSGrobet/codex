@@ -13,5 +13,6 @@ A CLI-based literary archive engine that models Books, Authors, Notes, Themes, Q
 - Later plug in semantic search
 
 *Built like a backend service*
+
 *Vide-coded, learning project*
 
