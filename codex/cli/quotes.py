@@ -17,8 +17,12 @@ def _format_quote(q: Quote) -> None:
     else:
         location_string = ""
     
-    book_string = f", {book_repo.get_by_id(q.book_id).title}" if q.book_id else ""
-    attr_string = f"{author_repo.get_by_id(q.author_id).name}{book_string}{location_string}"
+    author = author_repo.get_by_id(q.author_id) if q.author_id else None
+    author_string = author.name if author else "Unknown author"
+
+    book = book_repo.get_by_id(q.book_id) if q.book_id else None
+    book_string = f", {book.title}" if book else ""
+    attr_string = f"{author_string}{book_string}{location_string}"
     typer.echo(f"{q.text}")
     typer.echo(f"\t- {attr_string}\n")
     typer.echo(f"Quote id: {q.id}")
@@ -53,7 +57,7 @@ def add_quote(
 
 
 @app.command("list")
-def list_quotees():
+def list_quotes():
     """List all quotes in the archive"""
     quotes = quote_repo.list_all()
     if not quotes:
@@ -68,8 +72,70 @@ def quotes_by_author(author_id: str = typer.Argument(...)):
     """Get all quotes by specified author"""
     results = quote_repo.get_by_author(author_id)
     if not results:
-        typer.echo(f"No quotes found by {author_repo.get_by_id(author_id).name}")
+        typer.echo(f"No quotes found by id {author_id}.")
         raise typer.Exit()
     for i, q in enumerate(results, 1):
         print(f"---- [{i}]")
         _format_quote(q)
+
+@app.command("by-book")
+def quotes_by_book(book_id: str = typer.Argument(...)):
+    """Get all quotes attached to a book"""
+    results = quote_repo.get_by_book(book_id)
+    if not results:
+        typer.echo(f"Couldn't find any quotes for book id {book_id}")
+        raise typer.Exit()
+    for i, q in enumerate(results, 1):
+        print(f"--- [{i}]")
+        _format_quote(q)
+
+@app.command("by-tag")
+def quotes_by_tag(tag: str = typer.Argument(...)):
+    """Get all quotes related to speecified tag."""
+    results = quote_repo.get_by_tag(tag)
+    if not results:
+        typer.echo(f"No quotes found with tag '{tag}'.")
+        raise typer.Exit()
+    for i, q in enumerate(results, 1):
+        print(f"---[{i}]")
+        _format_quote(q)
+
+@app.command("search")
+def search_quotes(query: str = typer.Argument(...)):
+    """Full text searc across quotes content."""
+    results = quote_repo.search(query)
+    if not results: 
+        typer.echo(f"No quotes found matching query '{query}'.")
+        raise typer.Exit()
+    for i, q in enumerate(results, 1):
+        print(f"---[{i}]")
+        _format_quote(q)
+
+@app.command("delete")
+def delete_quote(id: str = typer.Argument(...)):
+    """Delete a note by id."""
+    deleted = quote_repo.delete(id)
+    if deleted:
+        typer.echo(f"Quote {id} deleted.")
+    else:
+        typer.echo(f"No quote found with id {id}.")
+
+@app.command("update")
+def update_quote(
+        id: str = typer.Argument(...),
+        text: str = typer.Option(None),
+        tags: str = typer.Option(None, help="Comma separated list of tags, replaces existing tags")
+):
+    """Update a quote's text or tag list."""
+    quote = quote_repo.get_by_id(id)
+    if not quote:
+        typer.echo(f"No quotes found with id {id}.")
+        raise typer.Exit()
+
+    if text is not None:
+        quote.text = text
+    if tags is not None:
+        quote.tags = [t.strip() for t in tags.split(",")]
+
+    quote_repo.update(quote)
+    typer.echo(f"Quote updated (id: {id}).")

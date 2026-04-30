@@ -15,17 +15,18 @@ class TargetType(str, Enum):
 def _format_note(n: Note) -> None:
     """helper to print a note consistently accross commands"""
     #typer.echo(f"- {n.text[:60]}{'...' if len(n.text) > 60 else ''}")
+    typer.echo(f"- {n.text}\n")
     if n.target_type == "book":
         target = book_repo.get_by_id(n.target_id)
-        typer.echo(f"\ttarget: [{n.target_type}] {target.title} (id: {n.target_id})")
+        typer.echo(f"target: [{n.target_type}] {target.title} (id: {n.target_id})")
     elif n.target_type == "author":
         target = author_repo.get_by_id(n.target_id)
-        typer.echo(f"\ttarget: [{n.target_type}] {target.name} (id: {n.target_id})")
-    typer.echo(f"\tid: {n.id}")
+        typer.echo(f"target: [{n.target_type}] {target.name} (id: {n.target_id})")
+    typer.echo(f"id: {n.id}")
     if n.tags:
-        typer.echo(f"\ttags: {', '.join(n.tags)}")
-    typer.echo(f"\tcreated: {n.created_at}")
-    typer.echo(f"- {n.text}\n")
+        typer.echo(f"tags: {', '.join(n.tags)}")
+    typer.echo(f"created: {n.created_at}")
+    typer.echo("")
 
 @app.command("add")
 def add_note(
